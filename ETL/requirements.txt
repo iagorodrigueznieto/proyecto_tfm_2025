@@ -2,3 +2,5 @@ pyspark
 numpy
 pandas
 seaborn
+kagglehub
+geopy
