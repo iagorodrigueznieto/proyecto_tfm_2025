@@ -1,0 +1,1 @@
+Aquí se guardan los archivos una vez realizado el proceso de ingesta y limpieza.
