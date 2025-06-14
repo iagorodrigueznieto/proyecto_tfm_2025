@@ -86,10 +86,67 @@ Durante esta fase se llevaron a cabo varios procesos de limpieza para garantizar
 - Prescindir de columnas con datos no relevantes para el análisis.
 - Casos particulares:
     - En la tabla *competitions*, se reemplazo el id a los valores con id = -1.
+
+    ```
+    +---+-----------------+----------+------------+---+
+    |...|             type|country_id|country_name|...|
+    +---+-----------------+----------+------------+---+
+    |...|international_cup|        -1|        NULL|...|
+    |...|international_cup|        -1|        NULL|...|
+    |...|            other|        -1|        NULL|...|
+    |...|international_cup|        -1|        NULL|...|
+    ```
+
     - En la tabla *game_lineups*, se detectaron filas anómalas que probablemente resultaron de un error al descargar el archivo.
+
+    ```
+    +--------------------+----+-------+---------+-------+-----------+----+--------+------+------------+
+    |     game_lineups_id|date|game_id|player_id|club_id|player_name|type|position|number|team_captain|
+    +--------------------+----+-------+---------+-------+-----------+----+--------+------+------------+
+    |                  77|NULL|   NULL|     NULL|   NULL|       NULL|NULL|    NULL|  NULL|        NULL|
+    |                  77|NULL|   NULL|     NULL|   NULL|       NULL|NULL|    NULL|  NULL|        NULL|
+    |                  77|NULL|   NULL|     NULL|   NULL|       NULL|NULL|    NULL|  NULL|        NULL|
+    ```
+
     - En la tabla *appearances*, se eliminaron registros con id = -1.
+
+    ```
+    +--------------+-------+---------+--------------+----------------------+----------+-----------+
+    | appearance_id|game_id|player_id|player_club_id|player_current_club_id|      date|player_name|
+    +--------------+-------+---------+--------------+----------------------+----------+-----------+
+    |3084062_380365|3084062|   380365|         16486|                    -1|2018-09-05|       NULL|
+    |3084059_411294|3084059|   411294|          3302|                    -1|2018-09-11|       NULL|
+    |3084057_255495|3084057|   255495|         11596|                    -1|2018-09-12|       NULL|
+    |3102749_380365|3102749|   380365|         16486|                    -1|2018-09-12|       NULL|
+    |3106648_255495|3106648|   255495|         11596|                    -1|2018-10-17|       NULL|
+    |3118604_411294|3118604|   411294|          3302|                    -1|2018-12-05|       NULL|
+    +--------------+-------+---------+--------------+----------------------+----------+-----------+
+    ```
+
     - En la tabla *games*, se rellenó los valores nulos de las columnas *home_club_position* y *away_club_position* para competiciones que no usan ranking.
+
+    ```
+    +-------+--------------+------+--------------------+---+------------------+------------------+---+-----------------+
+    |game_id|competition_id|season|               round|...|home_club_position|away_club_position|...| competition_type|
+    +-------+--------------+------+--------------------+---+------------------+------------------+---+-----------------+
+    |2382266|           CDR|  2013|   4th round 2nd leg|...|       Sin Ranking|       Sin Ranking|...|     domestic_cup|
+    |2428286|           GRP|  2013|Quarter-Finals 1s...|...|       Sin Ranking|       Sin Ranking|...|     domestic_cup|
+    |2453103|          UKR1|  2013|        29. Matchday|...|                11|                 4|...|  domestic_league|
+    |2492457|            EL|  2014|             group L|...|       Sin Ranking|       Sin Ranking|...|international_cup|
+    |2501174|           GRP|  2014| First Round 1st leg|...|       Sin Ranking|       Sin Ranking|...|     domestic_cup|
+    |2518602|           GR1|  2014|        24. Matchday|...|                12|                18|...|  domestic_league|
+    ```
+
     - En la tabla *players*, se rellenó los valores nulos de la columna *first_name* para los casos de jugadores con apodos.
+    
+    ```
+    +---------+----------+------------+------------+---+
+    |player_id|first_name|   last_name|        name|...|
+    +---------+----------+------------+------------+---+
+    |       77|      NULL|       Lúcio|       Lúcio|...|
+    |      109|      NULL|        Dedê|        Dedê|...|
+    |     1426|      NULL|       Cacau|       Cacau|...|
+    ```
 
 Para que el proceso de limpieza fuese más rápido se definieron varias funciones que se utilizan a lo largo del código:
 - **mostrar_sumario()**: muestra un sumario de las métricas de la tabla.
