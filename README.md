@@ -252,37 +252,38 @@ Se crean y exportan las siguientes dimensiones en formato CSV:
 
 Este proceso facilita la integración con herramientas de BI, permitiendo consultas analíticas eficientes y modelado multidimensional a partir de datos futbolísticos históricos.
 
-## IA
+## 🤖 IA
 
-## Descripción General
+## 📝 Descripción General
 
 Esta parte del proyecto proyecto consta de dos componentes principales diseñados para predecir resultados relacionados con el fútbol utilizando técnicas de aprendizaje automático:
 
-1.  **Predictor de Talento Joven**: Identifica jugadores de fútbol jóvenes prometedores basándose en sus métricas de rendimiento y valor de mercado.
+1.   **Predictor de Talento Joven**: Identifica jugadores de fútbol jóvenes prometedores basándose en sus métricas de rendimiento y valor de mercado.
     
 2.  **Predictor de Resultados de Partidos**: Predice el resultado de partidos de fútbol basándose en estadísticas de equipos y jugadores.
     
 
 Se utilizan conjuntos de datos que contienen información de jugadores y partidos, procesados mediante diversos modelos de aprendizaje automático, incluyendo Random Forest, Regresión Logística, SVM, Naive Bayes y Redes Neuronales. La aplicación está construida con Streamlit para una interfaz web interactiva.
 
-## Archivos
+## 📂 Archivos
 
--   **App.py**: El script principal de la aplicación que implementa la interfaz web de Streamlit para ambos predictores: Talento Joven y Resultados de Partidos. Incluye carga de datos, preprocesamiento, entrenamiento de modelos y funcionalidades de visualización.
+-   📄 **App.py**: El script principal de la aplicación que implementa la interfaz web de Streamlit para ambos predictores: Talento Joven y Resultados de Partidos. Incluye carga de datos, preprocesamiento, entrenamiento de modelos y funcionalidades de visualización.
     
--   **ModeladoTFM.ipynb**: Un cuaderno de Jupyter que contiene la exploración inicial de datos, preprocesamiento y entrenamiento de modelos para el Predictor de Resultados de Partidos. Sirve como prototipo para la implementación en App.py.
+-   📓 **ModeladoTFM.ipynb**: Un cuaderno de Jupyter que contiene la exploración inicial de datos, preprocesamiento y entrenamiento de modelos para el Predictor de Resultados de Partidos. Sirve como prototipo para la implementación en App.py.
     
 
-## Requisitos
+## ⚙️ Requisitos
 
--   **Python 3.8+**
+-    **Python 3.8+**
     
 -   **Librerías**:
     
     ```bash
     pip install pandas numpy streamlit plotly sklearn tensorflow imblearn joblib keras-tuner
+    
     ```
     
--   **Conjuntos de Datos**: Los siguientes archivos CSV deben estar en la carpeta especificada (por defecto, ./dataset):
+-    **Conjuntos de Datos**: Los siguientes archivos CSV deben estar en la carpeta especificada (por defecto, ./dataset):
     
     -   appearances.csv
         
@@ -303,9 +304,9 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
     -   transfers.csv
         
 
-## Estructura del Proyecto
+## 🏗️ Estructura del Proyecto
 
-### App.py
+###  App.py
 
 -   **Interfaz de Usuario**: Utiliza Streamlit con dos pestañas:
     
@@ -313,7 +314,7 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   **Predictor de Resultados de Partidos**: Permite seleccionar equipos, fecha del partido e ID, y utiliza un modelo Random Forest para predecir resultados.
         
--   **Funcionalidades**:
+-   🔧 **Funcionalidades**:
     
     -   Carga y preprocesamiento de datos.
         
@@ -325,7 +326,7 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   Predicciones para jugadores destacados y partidos específicos.
         
--   **Configuración**:
+-   🛠️ **Configuración**:
     
     -   Ruta de datos ajustable en la barra lateral.
         
@@ -350,37 +351,38 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   Función para predecir resultados de partidos específicos.
         
--   **Ejemplo de Predicción**: Predice un partido entre Deportivo de La Coruña y Real Madrid con un 100% de probabilidad de victoria para el equipo visitante.
+-    **Ejemplo de Predicción**: Predice un partido entre Deportivo de La Coruña y Real Madrid con un 100% de probabilidad de victoria para el equipo visitante.
     
--   **Diferencias con App.py**: El cuaderno es más exploratorio, mientras que App.py está optimizado para una interfaz de usuario interactiva y modular.
+-    **Diferencias con App.py**: El cuaderno es más exploratorio, mientras que App.py está optimizado para una interfaz de usuario interactiva y modular.
     
 
-## Instalación
+## 🛠️ Instalación
 
-1.  Clona el repositorio o descarga los archivos.
+1.  📥 Clona el repositorio o descarga los archivos.
     
-2.  Instala las dependencias:
+2.  🔧 Instala las dependencias:
     
     ```bash
     pip install -r requirements.txt
+    
     ```
     
-3.  Coloca los archivos CSV en la carpeta ./dataset o ajusta la ruta en la interfaz de Streamlit.
+3.  📂 Coloca los archivos CSV en la carpeta ./dataset o ajusta la ruta en la interfaz de Streamlit.
     
-4.  Ejecuta la aplicación:
+4.  🚀 Ejecuta la aplicación:
     
     ```bash
     streamlit run App.py
+    
     ```
     
 
-## Uso
+## 📋 Uso
 
-1.  **Iniciar la Aplicación**:
+1.  🚀 **Iniciar la Aplicación**:
     
-    -   Ejecuta streamlit run App.py y accede a la interfaz web en tu navegador (normalmente http://localhost:8501).
-        
-2.  **Predictor de Talento Joven**:
+    -   Ejecuta streamlit run App.py y accede a la interfaz web en tu navegador (normalmente [http://localhost:8501](http://localhost:8501)).
+2.  🌟 **Predictor de Talento Joven**:
     
     -   Configura la ruta de los datos en la barra lateral.
         
@@ -392,7 +394,7 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   Haz clic en "Entrenar Modelos de Talento" para ver métricas, visualizaciones y los jugadores con mayor potencial.
         
-3.  **Predictor de Resultados de Partidos**:
+3.  ⚽ **Predictor de Resultados de Partidos**:
     
     -   Configura parámetros del modelo Random Forest (número de árboles, profundidad máxima).
         
@@ -403,15 +405,15 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
     -   Usa "Predecir Resultado" para obtener la predicción del partido con probabilidades.
         
 
-## Características Clave
+## 🔑 Características Clave
 
--   **Datos Utilizados**:
+-   📊 **Datos Utilizados**:
     
     -   Estadísticas de jugadores: goles, asistencias, minutos jugados, tarjetas, posición, valor de mercado.
         
     -   Estadísticas de equipos: tamaño de plantilla, edad promedio, porcentaje de extranjeros, jugadores de selección, capacidad del estadio, goles promedio.
         
--   **Modelos**:
+-   🤖 **Modelos**:
     
     -   Random Forest, Regresión Logística, SVM, Naive Bayes para talento joven.
         
@@ -419,7 +421,7 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   Red Neuronal personalizable con Keras para talento joven.
         
--   **Visualizaciones**:
+-   📈 **Visualizaciones**:
     
     -   Histogramas de distribución de edad.
         
@@ -429,7 +431,7 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
         
     -   Tablas de jugadores destacados y métricas de rendimiento.
         
--   **Optimizaciones**:
+-   🚀 **Optimizaciones**:
     
     -   Procesamiento paralelo para estadísticas de equipos.
         
@@ -438,14 +440,14 @@ Se utilizan conjuntos de datos que contienen información de jugadores y partido
     -   Caché de datos con @st.cache_data en Streamlit.
         
 
-## Ejemplo de Resultados
+## 🎯 Ejemplo de Resultados
 
 -   **Talento Joven**: Identifica jugadores como Lamine Yamal o Jamal Musiala como de alto potencial basándose en sus estadísticas y valor de mercado.
     
--   **Resultados de Partidos**: Predice un partido entre Deportivo de La Coruña y Real Madrid con un 100% de probabilidad de victoria para Real Madrid (basado en el cuaderno).
+-    **Resultados de Partidos**: Predice un partido entre Deportivo de La Coruña y Real Madrid con un 100% de probabilidad de victoria para Real Madrid (basado en el cuaderno).
     
 
-## Limitaciones
+## ⚠️ Limitaciones
 
 -   Requiere datos completos y actualizados para predicciones precisas.
     
