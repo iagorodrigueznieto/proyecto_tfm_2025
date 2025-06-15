@@ -10,6 +10,7 @@ El objetivo final es generar un análisis de rendimiento que permita predecir, c
 
 - ETL
     - ingesta_spark.ipynb
+    - script_modelo.ipynb
     - requirements.txt
 - Data
 - 
@@ -155,5 +156,98 @@ Para que el proceso de limpieza fuese más rápido se definieron varias funcione
 - **formatear_formaciones()**: esta función se usa exclusivamente para el conjunto de datos *games*, aplica un formato uniforme a las formaciones de los equipos.
 - **get_country()**: esta función se usa exclusivamente para el conjunto de datos *players*, mapea los valores de la columna *city_of_birth* a su respectivo país.
 
-## Instrucciones Modelado
+## Instrucciones Modelado (script_modelo.ipynb)
+Este notebook implementa un proceso ETL utilizando PySpark para transformar y modelar datos futbolísticos en un **esquema en estrella**, facilitando su análisis en herramientas como Power BI. A continuación se describen los pasos principales:
 
+### 🔧 1. Configuración e Inicialización
+- Se monta Google Drive para acceder a los archivos de entrada.
+- Se crea una sesión de Spark con `SparkSession`.
+    ```Python
+    from google.colab import drive
+    drive.mount('/content/drive')
+    
+    from pyspark.sql import SparkSession
+    spark = SparkSession.builder.appName("StarSchemaETL").getOrCreate()
+    ```
+### 📂 2. Carga de Datos
+- Se cargan archivos CSV limpios con información sobre competiciones, clubes, jugadores, partidos, apariciones y valuaciones de jugadores.
+  ```Python
+  competitions = spark.read.option("header", True).csv(competitions_file)
+  clubs = spark.read.option("header", True).csv(clubs_file)
+  players = spark.read.option("header", True).csv(players_file)
+  games = spark.read.option("header", True).csv(games_file)
+  appearances = spark.read.option("header", True).csv(appearances_file)
+  player_valuations = spark.read.option("header", True).csv(player_valuations_file)
+  ```
+
+### 🧱 3. Construcción de Tablas Dimensionales
+Se crean y exportan las siguientes dimensiones en formato CSV:
+- **`dim_competition`**: Información sobre competiciones.
+- **`dim_club`**: Detalles de los clubes participantes.
+- **`dim_player`**: Datos demográficos y posicionales de los jugadores.
+- **`dim_game`**: Información básica sobre los partidos.
+- **`dim_season`**: Rango de fechas por temporada, calculado manualmente.
+
+    ```Python
+    # Dimensión Competición
+    competitions.select("competition_id", "name", "type", "country_name") \
+    .coalesce(1).write.mode("overwrite").csv(output_dir + "dim_competition.csv", header=True)
+
+    # Dimensión Club
+    clubs.select("club_id", "name", "domestic_competition_id", "squad_size",
+             "average_age", "foreigners_number", "national_team_players", "stadium_name") \
+    .coalesce(1).write.mode("overwrite").csv(output_dir + "dim_club.csv", header=True)
+
+    # Dimensión Jugador
+    players.select("player_id", "name", "position", "sub_position", "date_of_birth", "height_in_cm") \
+        .coalesce(1).write.mode("overwrite").csv(output_dir + "dim_player.csv", header=True)
+    
+    # Dimensión Partido
+    games.select("game_id", "date", "home_club_id", "away_club_id",
+                 "home_club_goals", "away_club_goals", "round", "referee") \
+        .coalesce(1).write.mode("overwrite").csv(output_dir + "dim_game.csv", header=True)
+    
+    # Dimensión Temporada (dim_season)
+    # Se asume que cada temporada inicia el 1 de julio y termina el 30 de junio del siguiente año
+    seasons = games.select("season").distinct().dropna().withColumn("season", col("season").cast("int"))
+    dim_season = seasons.withColumn("season_year", col("season").cast("string").substr(1, 4)) \
+                        .withColumn("season_start_date", concat(col("season_year"), lit("-07-01"))) \
+                        .withColumn("next_season_year", (col("season") + 1).cast("string").substr(1, 4)) \
+                        .withColumn("season_end_date", concat(col("next_season_year"), lit("-06-30"))) \
+                        .drop("season_year", "next_season_year")
+    
+    dim_season.coalesce(1).write.mode("overwrite").csv(output_dir + "dim_season.csv", header=True)
+
+    ```
+
+### 📊 4. Creación de la Tabla de Hechos (`fact_performance`)
+- Se transforma la tabla `appearances` para normalizar las métricas de rendimiento (goles, asistencias, minutos, tarjetas).
+- Se une con `games` para incorporar fecha y temporada.
+- Se empareja cada rendimiento con la **valuación de mercado más cercana en el tiempo**, usando una ventana particionada por jugador y partido.
+- Se genera un ID único para cada fila.
+    ```Python
+    # Selección de columnas finales de la tabla de hechos
+    fact_performance = ranked.selectExpr(
+        "uuid() as performance_id",
+        "game_id",
+        "player_id",
+        "club_id",
+        "competition_id",
+        "season",
+        "goals",
+        "assists",
+        "minutes_played",
+        "yellow_cards",
+        "red_cards",
+        "market_value_in_eur"
+    )
+
+    # Guardado como único archivo CSV
+    fact_performance.coalesce(1).write.mode("overwrite").csv(output_dir + "fact_performance.csv", header=True)
+    ```
+
+### 💾 5. Exportación
+- Todas las tablas (dimensiones y hechos) se guardan en formato CSV, listas para ser utilizadas en un modelo de datos de análisis.
+  
+
+Este proceso facilita la integración con herramientas de BI, permitiendo consultas analíticas eficientes y modelado multidimensional a partir de datos futbolísticos históricos.
